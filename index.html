@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System nauki z fiszkami</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AGH Egzamin Wstępny</h1>
+            <div class="theme-toggle">
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider round"></span>
+                </label>
+                <span id="themeLabel">Jasny motyw</span>
+            </div>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="categoryFilter">Kategoria:</label>
+                <select id="categoryFilter">
+                    <option value="all">Wszystkie kategorie</option>
+                    <!-- Kategorie będą dodane dynamicznie -->
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="modeSelector">Tryb:</label>
+                <select id="modeSelector">
+                    <option value="flashcards">Fiszki</option>
+                    <option value="quiz">Quiz</option>
+                    <option value="test">Test</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="orderToggle">Kolejność:</label>
+                <select id="orderToggle">
+                    <option value="sequential">Sekwencyjna</option>
+                    <option value="random">Losowa</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="searchInput">Szukaj:</label>
+                <input type="text" id="searchInput" placeholder="Wpisz szukaną frazę...">
+            </div>
+
+            <div class="control-group" id="testSettingsGroup" style="display: none;">
+                <label for="questionCount">Liczba pytań:</label>
+                <input type="number" id="questionCount" min="5" max="50" value="20">
+                <button id="startTestBtn">Rozpocznij test</button>
+            </div>
+
+            <div class="control-group">
+                <label for="statusFilter">Status:</label>
+                <select id="statusFilter">
+                    <option value="all">Wszystkie</option>
+                    <option value="new">Nowe</option>
+                    <option value="review">Do powtórki</option>
+                    <option value="learned">Nauczone</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div id="flashcardContainer" class="flashcard-container">
+                <div class="flashcard">
+                    <div class="flashcard-front">
+                        <p>Kliknij "Rozpocznij", aby rozpocząć naukę</p>
+                    </div>
+                    <div class="flashcard-back">
+                        <p>Tutaj pojawi się odpowiedź</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quizContainer" class="quiz-container" style="display: none;">
+                <div class="question-container">
+                    <h3 id="questionText"></h3>
+                </div>
+                <div id="optionsContainer" class="options-container"></div>
+                <div id="feedbackContainer" class="feedback-container"></div>
+            </div>
+
+            <div id="testContainer" class="test-container" style="display: none;">
+                <div id="testProgressContainer" class="test-progress-container">
+                    <div id="testProgress" class="test-progress"></div>
+                </div>
+                <div id="testQuestionContainer" class="question-container">
+                    <h3 id="testQuestionText"></h3>
+                </div>
+                <div id="testOptionsContainer" class="options-container"></div>
+                <div id="testResultsContainer" class="test-results-container" style="display: none;">
+                    <h2>Wyniki testu</h2>
+                    <div id="testResultsSummary"></div>
+                    <div id="testResultsDetails"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation-buttons">
+            <button id="prevBtn" disabled>Poprzednie</button>
+            <button id="startBtn">Rozpocznij</button>
+            <button id="nextBtn" disabled>Następne</button>
+            <button id="checkAnswerBtn" style="display: none;">Sprawdź</button>
+            <button id="showAnswerBtn" style="display: none;">Pokaż odpowiedź</button>
+        </div>
+
+        <div id="timerContainer" class="timer-container" style="display: none;">
+            <div id="timer">00:00</div>
+        </div>
+
+        <div class="stats-panel">
+            <h3>Statystyki</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">Wszystkie:</span>
+                    <span id="statTotal" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Nowe:</span>
+                    <span id="statNew" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Do powtórki:</span>
+                    <span id="statReview" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Nauczone:</span>
+                    <span id="statLearned" class="stat-value">0</span>
+                </div>
+            </div>
+            
+            <h4>Historia testów</h4>
+            <div id="testHistory" class="test-history">
+                <p>Brak historii testów</p>
+            </div>
+        </div>
+
+        <div class="data-management">
+            <button id="exportProgressBtn">Eksportuj postęp</button>
+            <label for="importProgressFile" class="import-label">Importuj postęp</label>
+            <input type="file" id="importProgressFile" accept=".json" style="display: none;">
+            <button id="resetProgressBtn">Resetuj postęp</button>
+        </div>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <h2 id="modalTitle">Tytuł</h2>
+            <div id="modalContent">Treść</div>
+            <div class="modal-buttons">
+                <button id="modalCancelBtn">Anuluj</button>
+                <button id="modalConfirmBtn">Potwierdź</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="questions.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
